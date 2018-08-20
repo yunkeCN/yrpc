@@ -1,0 +1,30 @@
+{
+  "name": "yrpc",
+  "version": "0.1.0",
+  "description": "Remote Procedure Calling over GRPC for NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node demo/client.js",
+    "server": "node demo/server.js",
+    "client": "node demo/client.js"
+  },
+  "repository": "git@github.com:muhonglong/yrpc.git",
+  "files": [
+    "README.md",
+    "package.json",
+    "index.js",
+    "src/"
+  ],
+  "author": "Li Xiao-Bo <xiaoboleee@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-body": "^4.0.4",
+    "koa-router": "^7.4.0",
+    "protobufjs": "^6.8.8"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "grpc": "^1.14.1"
+  }
+}
