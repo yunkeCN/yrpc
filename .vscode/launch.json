@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "启动客户端",
+      "program": "${workspaceFolder}/demo/client.js",
+      "env": {
+        
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "启动服务端",
+      "program": "${workspaceFolder}/demo/server.js",
+      "env": {
+        
+      }
+    }
+  ]
+}
