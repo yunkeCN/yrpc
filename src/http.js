@@ -58,7 +58,7 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
             agent
           }, res => {
             if (res.statusCode !== 200) {
-              const err = new Error(`远程调用HTTP请求错误`);
+              const err = new Error(`http request error`);
               err.code = res.statusCode;
               err.params = json;
               err.url = `${prefix}${val}?${querystring.stringify(json)}`;
@@ -105,7 +105,7 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
             agent
           }, res => {
             if (res.statusCode !== 200) {
-              const err = new Error(`远程调用HTTP请求错误`);
+              const err = new Error(`http request error`);
               err.code = res.statusCode;
               err.body = json;
               err.url = `${prefix}${val}`;

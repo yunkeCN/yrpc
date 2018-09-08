@@ -5,9 +5,9 @@ Remote Procedure Calling over GRPC for NodeJS
 
 ```
 yarn add grpc
-yarn add rpc
+yarn add yrpc
 ```
 
 ```
-const rpc = require('rpc');
+const yrpc = require('yrpc');
 ```
