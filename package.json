@@ -1,6 +1,6 @@
 {
   "name": "yrpc",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Remote Procedure Calling over GRPC for NodeJS",
   "main": "index.js",
   "scripts": {

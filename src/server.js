@@ -51,33 +51,39 @@ module.exports = (files, {root = PROTO_ROOT_PATH, ssl, port = {rpc: 50051, http:
       const ssl = ssls[file];
       const port = ports[file];
       const host = `0.0.0.0:${port.rpc}`;
-      servers[host] || (servers[host] = {
-        service,
+      const {map} = servers[host] || (servers[host] = {
         ssl,
         port,
-        hook: {}
+        map: {}
       });
-      const server = servers[host].hook;
-      const hook = hooks[file];
-      for (let fn in service) {
-        const {originalName: name, options} = service[fn];
-        server[name] = hook[name] || (({request: req}, cb) => cb(new Error(`func ${name} is not able`)));
-        server[name].options = options;
-      }
+      map[file] = {
+        service,
+        hook: hooks[file]
+      };
     }
   }
 
 
   for (let host in servers) {
-    const {service, hook, ssl, port} = servers[host];
+    const {map, ssl, port} = servers[host];
     const server = new grpc.Server();
-    server.addService(service, hook);
+    const hookSet = {};
+    for (let f in map) {
+      const {service, hook} = map[f];
+      server.addService(service, hook);
+      // 
+      for (let fn in service) {
+        const {originalName: name, options} = service[fn];
+        hookSet[name] = hook[name] || (({request: req}, cb) => cb(new Error(`func ${name} is not added`)));
+        hookSet[name].options = options;
+      }
+    }
     server.bind(host, createCred(ssl));
     server.start();
+    console.log(`grpc server opened at 0.0.0.0:${port.rpc}`);
     // 
-    httpServer({ssl, hook, service, port: port.http}, () => {
-      // console.log('http server open');
-    });
+    httpServer({ssl, hook: hookSet, port: port.http}, () => {});
+    console.log(`http server opened at 0.0.0.0:${port.http}`);
   }
 
 

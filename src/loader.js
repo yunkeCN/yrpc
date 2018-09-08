@@ -120,9 +120,20 @@ function addIncludePathResolver(root, includePaths) {
       try {
         fs.accessSync(fullPath, fs.constants.R_OK);
         return fullPath;
-      }
-      catch (err) {
-        continue;
+      } catch (err) {
+        var idx = target.lastIndexOf("google/protobuf/");
+        if (idx > -1) {
+          target = `github.com/google/protobuf/src/${target}`;
+          fullPath = path.join(directory, target);
+          try {
+            fs.accessSync(fullPath, fs.constants.R_OK);
+            return fullPath;
+          } catch (err) {
+            continue;
+          }
+        } else {
+          continue;
+        }
       }
     }
     return null;
