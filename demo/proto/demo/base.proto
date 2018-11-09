@@ -10,7 +10,19 @@ service Ping {
       get: "/echo"
     };
   }
+  rpc Add(NumberList) returns (Result) {
+    option (google.api.http) = {
+      get: "/add"
+    };
+  }
 }
 message EchoMessage {
   string text = 1;
+}
+
+message NumberList {
+  repeated uint64 num = 1;
+}
+message Result {
+  uint64 num = 1;
 }

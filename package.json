@@ -1,12 +1,12 @@
 {
   "name": "yrpc",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "Remote Procedure Calling over GRPC for NodeJS",
   "main": "index.js",
   "scripts": {
-    "start": "node demo/client.js",
-    "server": "node demo/server.js",
-    "client": "node demo/client.js"
+    "start": "cross-env NODE_PATH=demo/node_modules node demo/client.js",
+    "server": "cross-env NODE_PATH=demo/node_modules node demo/server.js",
+    "client": "cross-env NODE_PATH=demo/node_modules node demo/client.js"
   },
   "repository": "git@github.com:muhonglong/yrpc.git",
   "files": [
@@ -23,8 +23,10 @@
     "koa-router": "^7.4.0",
     "protobufjs": "^6.8.8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cross-env": "^5.2.0"
+  },
   "peerDependencies": {
-    "grpc": "^1.14.1"
+    "grpc": "^1.16.0"
   }
 }

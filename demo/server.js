@@ -11,6 +11,10 @@ const proto = rpc.server([
       echo: ({request: req, metadata: meta}, cb) => {
         const username = meta.get('username')[0];
         cb(null, req);
+      },
+      add: ({request: req}, cb) => {
+        const ret = (req.num || []).reduce((sum, it) => sum + parseInt(it), 0);
+        cb(null, {num: ret});
       }
     }
   }
@@ -27,8 +31,19 @@ const proto = rpc.server([
     ],
     check: false
   },
+  /**
+   * port 为数字或字符串时 同 port: {rpc: 50051}
+   * http 或 rpc 不存在时，不启动对应的服务器
+   */
   port: {
     http: 50052,
     rpc: 50051
+  },
+  inspect: true,
+  loader: {
+    longs: String,
+    includeDirs: ['/home/nil']
   }
 });
+
+console.log(proto);

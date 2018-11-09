@@ -10,9 +10,17 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const bodyparser = require('koa-body');
 const {loadSync} = require('./loader');
+const inspect = require('./inspect');
 const meta = require('./meta');
+const {PROTO_ROOT_PATH, CERT_ROOT_PATH} = require('./const');
 
-module.exports = (files, {root = PROTO_ROOT_PATH, ssl, port = {rpc: 50051, http: 50052}}) => {
+module.exports = (files, {
+  root = PROTO_ROOT_PATH,
+  ssl,
+  port = {rpc: 50051, http: 50052},
+  inspect: needInspect,
+  loader = {}
+}) => {
   const ssls = {};
   const ports = {};
   const hooks = {};
@@ -28,19 +36,31 @@ module.exports = (files, {root = PROTO_ROOT_PATH, ssl, port = {rpc: 50051, http:
 
       ssls[filename] = f.ssl || ssl;
       ports[filename] = f.port || port;
+      Object.prototype.toString.call(ports[filename]) !== '[object Object]' && (ports[filename] = {rpc: ports[filename]});
       hooks[filename] = f.hook || {};
 
       return filename;
     });
 
-
+  const dirs = (root ? [root] : []).concat(loader.includeDirs || []);
   const obj = grpc.loadPackageDefinition(loadSync(files, {
     keepCase: true,
     defaults: true,
     arrays: true,
     objects: true,
-    includeDirs: root ? [root] : undefined
+    ...loader,
+    includeDirs: dirs.length ? dirs : undefined
   }));
+
+
+  if (needInspect) {
+    const desc = inspect(obj);
+    Object.defineProperty(obj, 'desc', {
+      enumerable: false,
+      configurable: false,
+      value: desc
+    });
+  }
 
 
   const servers = {};
@@ -78,12 +98,16 @@ module.exports = (files, {root = PROTO_ROOT_PATH, ssl, port = {rpc: 50051, http:
         hookSet[name].options = options;
       }
     }
-    server.bind(host, createCred(ssl));
-    server.start();
-    console.log(`grpc server opened at 0.0.0.0:${port.rpc}`);
+    port.rpc && server.bindAsync(host, createCred(ssl), (err, ret) => {
+      if (!err && ret !== 0) {
+        server.start();
+        console.log(`grpc server opened at 0.0.0.0:${port.rpc}`);
+      }
+    });
     // 
-    httpServer({ssl, hook: hookSet, port: port.http}, () => {});
-    console.log(`http server opened at 0.0.0.0:${port.http}`);
+    port.http && httpServer({ssl, hook: hookSet, port: port.http}, () => {
+      console.log(`http server opened at 0.0.0.0:${port.http}`);
+    });
   }
 
 
