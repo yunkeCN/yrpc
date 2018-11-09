@@ -17,7 +17,8 @@ function rpc(files, {
   ssl,
   http,
   host = () => DEFAULT_HOST,
-  inspect: needInspect
+  inspect: needInspect,
+  loader = {}
 }) {
   const ssls = {};
 
@@ -35,13 +36,14 @@ function rpc(files, {
       return filename;
     });
 
-
+  const dirs = (root ? [root] : []).concat(loader.includeDirs || []);
   const obj = grpc.loadPackageDefinition(loadSync(files, {
     keepCase: true,
     defaults: true,
     arrays: true,
     objects: true,
-    includeDirs: root ? [root] : undefined
+    ...loader,
+    includeDirs: dirs.length ? dirs : undefined
   }));
 
 
