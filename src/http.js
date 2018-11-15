@@ -57,23 +57,23 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
             },
             agent
           }, res => {
-            if (res.statusCode !== 200) {
-              const err = new Error(`http request error`);
-              err.code = res.statusCode;
-              err.params = json;
-              err.url = `${prefix}${val}?${querystring.stringify(json)}`;
-              cb(err);
-            } else {
-              let body = Buffer.from("");
-              res.on('data', chunk => { body = Buffer.concat([body, chunk]); });
-              res.on("end", () => {
-                try {
+            let body = Buffer.from("");
+            res.on('data', chunk => { body = Buffer.concat([body, chunk]); });
+            res.on("end", () => {
+              try {
+                if (res.statusCode !== 200) {
+                  const err = new Error(body.toString() || `http request error`);
+                  err.code = res.statusCode;
+                  err.body = json;
+                  err.url = `${prefix}${val}?${querystring.stringify(json)}`;
+                  cb(err);
+                } else {
                   cb(null, JSON.parse(body));
-                } catch (e) {
-                  cb(e);
                 }
-              });
-            }
+              } catch (e) {
+                cb(e);
+              }
+            });
           });
           req.on('error', e => {
             cb(e);
@@ -104,23 +104,23 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
             },
             agent
           }, res => {
-            if (res.statusCode !== 200) {
-              const err = new Error(`http request error`);
-              err.code = res.statusCode;
-              err.body = json;
-              err.url = `${prefix}${val}`;
-              cb(err);
-            } else {
-              let body = Buffer.from("");
-              res.on('data', chunk => { body = Buffer.concat([body, chunk]); });
-              res.on("end", () => {
-                try {
+            let body = Buffer.from("");
+            res.on('data', chunk => { body = Buffer.concat([body, chunk]); });
+            res.on("end", () => {
+              try {
+                if (res.statusCode !== 200) {
+                  const err = new Error(body.toString() || `http request error`);
+                  err.code = res.statusCode;
+                  err.body = json;
+                  err.url = `${prefix}${val}`;
+                  cb(err);
+                } else {
                   cb(null, JSON.parse(body));
-                } catch (e) {
-                  cb(e);
                 }
-              });
-            }
+              } catch (e) {
+                cb(e);
+              }
+            });
           });
           req.on('error', e => {
             cb(e);
