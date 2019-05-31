@@ -1,7 +1,7 @@
 /**
  * http forward
  */
-const http = require('http');
+const http = require('https');
 const querystring = require('querystring');
 
 const requests = {};
