@@ -48,7 +48,6 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
           });
           const req = http.request({
             hostname: host,
-            port,
             path: `${prefix}${val}?${querystring.stringify(json)}`,
             method: "GET",
             headers: {
@@ -93,7 +92,6 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
           });
           const req = http.request({
             hostname: host,
-            port,
             path: `${prefix}${val}`,
             method: key,
             headers: {
