@@ -41,11 +41,6 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
       case 'get':
         return (json, meta, cb) => {
           json = flat(json);
-          const agent = new http.Agent({
-            rejectUnauthorized: false,
-            ciphers: "ALL",
-            secureProtocol: "TLSv1_1_method"
-          });
           const req = http.request({
             hostname: host,
             path: `${prefix}${val}?${querystring.stringify(json)}`,
@@ -54,7 +49,6 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
               host,
               ...(meta ? meta.getMap() : {})
             },
-            agent
           }, res => {
             let body = Buffer.from("");
             res.on('data', chunk => { body = Buffer.concat([body, chunk]); });
@@ -85,11 +79,6 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
       case 'patch':
         return (json, meta, cb) => {
           json  = JSON.stringify(json);
-          const agent = new http.Agent({
-            rejectUnauthorized: false,
-            ciphers: "ALL",
-            secureProtocol: "TLSv1_1_method"
-          });
           const req = http.request({
             hostname: host,
             path: `${prefix}${val}`,
@@ -100,7 +89,6 @@ function createRequest(options, {host, port = 80, prefix = '', ssl}) {
               'Content-Length': Buffer.byteLength(json),
               ...(meta ? meta.getMap() : {})
             },
-            agent
           }, res => {
             let body = Buffer.from("");
             res.on('data', chunk => { body = Buffer.concat([body, chunk]); });
