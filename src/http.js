@@ -1,7 +1,8 @@
 /**
  * http forward
  */
-const http = require('https');
+const _http = require('http')
+const _https = require("https")
 const querystring = require('querystring');
 
 const requests = {};
@@ -34,6 +35,7 @@ class HttpClient {
 module.exports = HttpClient;
 
 function createRequest(options, {host, port = 80, prefix = '', ssl}) {
+  const http = ssl ? _https : _http
   for (let key in options) {
     const val = options[key];
     key = key.replace(/^\(google\.api\.http\)\./, '').toLowerCase();
